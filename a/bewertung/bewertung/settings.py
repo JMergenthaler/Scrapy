@@ -3,7 +3,7 @@ BOT_NAME = "bewertung"
 SPIDER_MODULES = ["bewertung.spiders"]
 NEWSPIDER_MODULE = "bewertung.spiders"
 
-ROBOTSTXT_OBEY = True
+ROBOTSTXT_OBEY = False
 
 #PROXY_POOL_ENABLED = True
 

@@ -34,6 +34,8 @@ class TrustpilotSpider(scrapy.Spider):
     def parse(self, response):
         all_reviews = response.css(".styles_loadMoreLanguages__wonXg::attr(href)").get()
         last_page = response.css(".pagination_paginationEllipsis__4lfLO+ .pagination-link_item__mkuN3::attr(href)").get()
+        next_page = response.css(".pagination-link_next__SDNU4::attr(href)").get()
+        first_page = response.css('.pagination-link_rel__VElFy+ .pagination-link_item__mkuN3::attr(href)').get()
         if all_reviews:
             yield response.follow(response.urljoin(all_reviews), self.parse_start)
         elif last_page:
@@ -41,6 +43,10 @@ class TrustpilotSpider(scrapy.Spider):
                 'last_page': last_page
             }
             yield response.follow(response.urljoin(last_page), self.parse)
+        elif next_page:
+            yield response.follow(response.urljoin(next_page), self.parse)
+        else:
+            yield response.follow(response.urljoin(first_page), self.parse_start)
 
     def parse_start(self, response):
         # Extract the review details from the page
@@ -77,4 +83,4 @@ class TrustpilotSpider(scrapy.Spider):
 
         next_page = response.css('a.pagination-link_next__SDNU4::attr(href)').get()
         if next_page:
-            yield response.follow(response.urljoin(next_page), self.parse_start)
+            yield response.follow(response.urljoin(next_page), self.parse_start, dont_filter = True)

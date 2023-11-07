@@ -1,4 +1,4 @@
-#!C:\Users\j.mergenthaler\Desktop\a\.venv\Scripts\python.exe
+#!C:\Users\j.mergenthaler\Neuer Ordner\a\.venv\Scripts\python.exe
 
 import sys
 import json

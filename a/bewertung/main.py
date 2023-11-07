@@ -1,4 +1,5 @@
 import re
+import os
 import scrapy
 from scrapy.crawler import CrawlerProcess
 from bewertung.spiders.amazon_ue_test import AmazonspiderSpider
@@ -21,34 +22,43 @@ def run_spider_trust(link):
     process.start()
 
 def read_file():
-    f = open("C:\\Users\\j.mergenthaler\\Desktop\\a\\bewertung\\link.json", "r")
-    data = json.load(f)
-    if data:
-        link = data[0].get('link', '')
-        url = link
-    else:
-        print("No data in the JSON.")
-        return
+    directory = ".\\..\\bewertung\\json\\"
 
-    regex = r"https:\/\/([\w.-]+)"
+# Iterate over each file in the directory
+    for filename in os.listdir(directory):
+        # Construct the full file path
+        filepath = os.path.join(directory, filename)
+        # Check if it's a file and not a directory (or use any other filter you need)
+        if os.path.isfile(filepath):
+            # Open and read the file
+            with open(filepath, 'r') as f:
+                data = json.load(f)
+                if data:
+                    link = data[0].get('link', '')
+                    url = link
+                else:
+                    print("No data in the JSON.")
+                    return
 
-    match = re.search(regex, url)
+                regex = r"https:\/\/([\w.-]+)"
 
-    if match:
-        result = match.group(1)
-        regex_am = r"amazon"
-        match = re.search(regex_am, result)
-        regex_trust = r"trustpilot" 
-        match2 = re.search(regex_trust, result)
-        if match:
-            result = match.group()
-            run_spider_am(url)
-        elif match2:
-            result = match2.group()
-            run_spider_trust(url)
-        else:
-            print("Nicht Supportet")
-    else:
-        print("No match found.")
+                match = re.search(regex, url)
+
+                if match:
+                    result = match.group(1)
+                    regex_am = r"amazon"
+                    match = re.search(regex_am, result)
+                    regex_trust = r"trustpilot" 
+                    match2 = re.search(regex_trust, result)
+                    if match:
+                        result = match.group()
+                        run_spider_am(url)
+                    elif match2:
+                        result = match2.group()
+                        run_spider_trust(url)
+                    else:
+                        print("Nicht Supportet")
+                else:
+                    print("No match found.")
 
 read_file()
