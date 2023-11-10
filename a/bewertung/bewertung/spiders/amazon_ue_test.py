@@ -30,7 +30,7 @@ class AmazonspiderSpider(scrapy.Spider):
     }
 
     def parse(self, response):
-        ret = response.css('#cr-pagination-footer-0 .a-text-bold').attrib['href']
+        ret = response.css('#reviews-medley-footer .a-text-bold').attrib['href']
         if ret:
             yield response.follow(response.urljoin(ret), self.parse_ret)
         else: 
